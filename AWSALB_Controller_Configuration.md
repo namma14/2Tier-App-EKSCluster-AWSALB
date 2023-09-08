@@ -1,0 +1,52 @@
+## Configure AWS ALB Controller on EKS Cluster
+controllers are required for customer to access the application within private sub-net of VPC where application is deployed
+on pod in worker node of EKS Cluster.
+# Download IAM Policy
+```
+curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json
+```
+# Create IAM Policy
+```
+aws iam create-policy \
+    --policy-name AWSLoadBalancerControllerIAMPolicy \
+    --policy-document file://iam_policy.json
+```
+# Create IAM Role
+```
+eksctl create iamserviceaccount \
+  --cluster=<your-cluster-name> \
+  --namespace=kube-system \
+  --name=aws-load-balancer-controller \
+  --role-name AmazonEKSLoadBalancerControllerRole \
+  --attach-policy-arn=arn:aws:iam::<your-aws-account-id>:policy/AWSLoadBalancerControllerIAMPolicy \
+  --approve
+```
+### Deploy ALB Controller
+# Install helm
+```
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+```
+# Add helm Repo
+```
+helm repo add eks https://aws.github.io/eks-charts
+```
+# Update helm repo
+```
+helm repo update eks
+```
+# Install AWS Load Balancer Controller
+```
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \            
+  -n kube-system \
+  --set clusterName=<your-cluster-name> \
+  --set serviceAccount.create=false \
+  --set serviceAccount.name=aws-load-balancer-controller \
+  --set region=<region> \
+  --set vpcId=<your-vpc-id>
+```
+# Verify Controller is running
+```
+kubectl get deployment -n kube-system aws-load-balancer-controller
+```
