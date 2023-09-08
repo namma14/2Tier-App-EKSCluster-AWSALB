@@ -13,3 +13,9 @@ the AWS CLI in the AWS Command Line Interface User Guide.After installing the AW
 For more information, see Quick configuration with aws configure in the AWS Command Line Interface User Guide.elow link
 Follow the commands mentioned on below link
 - https://eksctl.io/introduction/#installation
+# Configure the AWS service 
+command- aws configure
+ - AWS Access Key ID -  To find access Key and Click UserName (top left corner) > Secret Key > Access Key.
+ - AWS Secret Access Key
+ - Default Region Name
+ - Default Output Format
