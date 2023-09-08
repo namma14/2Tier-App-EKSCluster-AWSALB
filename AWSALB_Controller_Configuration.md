@@ -46,6 +46,7 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   --set region=<region> \
   --set vpcId=<your-vpc-id>
 ```
+- To get VPC ID : Goto EKS Cluster > Networking > VPC ID
 # Verify Controller is running
 ```
 kubectl get deployment -n kube-system aws-load-balancer-controller
